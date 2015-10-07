@@ -1,0 +1,5 @@
+*.pdf
+auto/
+*.aux
+*.log
+*.out
