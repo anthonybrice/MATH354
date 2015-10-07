@@ -5,6 +5,7 @@
 
 \usepackage{tikz}
 \usetikzlibrary{positioning}
+\usetikzlibrary{decorations.pathreplacing}
 
 \begin{document}
 \maketitle
@@ -141,6 +142,10 @@
     \node [above=6.8cm of zz] (az) {};
     \draw [<->] (zz.south) -- (az) node [midway,fill=white] {$\lg n$};
 
+    \draw [decorate,decoration={brace,amplitude=7pt,mirror},yshift=212pt]
+    (aa.south west) -- (ia.south east) node [midway,yshift=-0.6cm]
+    {$n^{\lg 3}$};
+
     \path (z -| i) ++(3cm,0) node {$n$};
     \path (a -| i) ++(3cm,0) node {${3 \over 2} n$};
     \path (e -| i) ++(3cm,0) node {$\left( {3 \over 2} \right)^2 n$};
@@ -211,16 +216,138 @@ level, or $O(n \lg n)$.
 
 \noindent
 We expect the solution to be at most the number of levels ($n$) times the cost
-of each level (which averages to $n$), or $n^2$.
+of each level ($n - i$), or $n^2$.
 
 \begin{proof}
-  Assume $T(m) \leq cm^2$ for some $c > 0$ and $m < n$. Then
+  Assume $T(m) \leq cm^2$ for some $c > 0$ and for all positive $m < n$. Then
   $T(n - 1) \leq c {(n - 1)}^2$. Then
   \begin{align*}
+    % T(n) &\leq c(n - 1) + 1 \\
+    % &= cn - c + 1 \\
+    % &\leq cn && \text{for } c = 1 \, .
     T(n) &\leq c{(n - 1)}^2 + 1 \\
-    &=
+    &= cn^2 - 2cn + c + 1 \\
+    &\leq cn^2 && \text{for } c = 1 \, .
   \end{align*}
 \end{proof}
+
+\section{Problem 6}
+\emph{Use the master method to give tight asymptotic bounds for the following
+  recurrences.
+  \begin{enumerate}[label=(\alph*)]
+  \item $T(n) = 2T(n/4) + 1$.
+  \item $T(n) = 2T(n/4) + \sqrt{n}$.
+  \item $T(n) = 2T(n/4) + n$.
+  \item $T(n) = 2T(n/4) + n^2$.
+  \end{enumerate}
+}
+\medskip
+
+\noindent
+Note that in all cases $a = 2$ and $b = 4$. Then $\log_4{2} = {1/2}$.
+\begin{enumerate}[label=(\alph*)]
+\item $f(n) = 1 = O(n^{1/2 - \epsilon})$ when $\epsilon = 1/2$. Then
+  $T(n) = \Theta(n/2)$.
+\item $f(n) = \sqrt{n} = \Theta(n^{1/2})$. Then $T(n) = \lg n \sqrt{n}$.
+\item $f(n) = n = \Omega(n^{1/2 + \epsilon})$ when $\epsilon = 1/2$. Then $T(n)
+  = \Theta(n)$.
+\item $f(n) = n^2 = \Omega(n^{1/2 + \epsilon})$ when $\epsilon = 3/2$. Then
+  $T(n) = \Theta(n^2)$.
+\end{enumerate}
+
+\section{Problem 7}
+\emph{Use the master method to show that solution to the binary-search
+  recurrence $T(n) = T(n/2) + \Theta(1)$ is $T(n) = \Theta(\lg n)$.}
+\medskip
+
+\noindent
+$a = 1$, $b = 2$, and $f(n) = \Theta(1)$. Since $\Theta(1) = \Theta(n^{\log_2 1})
+= \Theta(1)$, case 2 applies. Then $T(n) = \Theta(\lg n)$.
+
+\section{Problem 8}
+\emph{Suppose you're choosing among the following three algorithms:
+  \begin{enumerate}[label=(\Alph*)]
+  \item Solves problems by dividing them into five subdomains of half the size,
+    recursively solving each subproblem, and then combining the solutions in
+    linear time.
+  \item Solves problems of size by $n$ by recursively solving two subproblems of
+    size $n - 1$ and then combining the results in constant time.
+  \item Solves problems of size $n$ by dividing then into $9$ subproblems of
+    size $n/3$, recursively solving each subproblem, and then combining the
+    solutions in $O(n^2)$ time.
+  \end{enumerate}
+  What are the running times of each of these algorithms and which would you
+  choose?
+}
+\medskip
+
+\begin{enumerate}[label=(\Alph*)]
+\item $T(n) = 5T(n/2) + n$. Note that case 3 of the master method fails here
+  because there exists no $c < 1$ such that $5n/2 \leq cn$. Using a recursion
+  tree, we can find that any given problem will be solved in $\lg n$ levels with
+  a cost of ${(5/2)}^i n$ each. Therefore, we assign this algorithm an upper
+  bound of $O(n \lg n)$.
+\item $T(n) = 2T(n - 1) + c$. Using a recursion tree, we find any given problem
+  will be solved in $n$ levels with a cost of $2^{n}$ at each level. Therefore
+  we assign this algorithm an upper bound of $O(2^n)$.
+\item $T(n) = 9T(n/3) + O(n^2)$. Using a recursion tree, we find any given
+  problem will be solved in $\log_3 n$ levels with a cost of ${(9/3)}^i O(n^2)$.
+  Therefore we assign this algorithm an upper bound of $O(n^2 \log_3 n)$.
+\end{enumerate}
+
+Given the above analysis, we would prefer algorithm A over the others.
+
+\section{Problem 9}
+\emph{Solve the following recurrences and give a $\Theta$ bound for each.
+  \begin{enumerate}[label= (\alph*)]
+  \item $T(n) = 7T(n/7) + n$.
+  \item $T(n) = 9T(n/3) + n^2$.
+  \item $T(n) = 8T(n/2) + n^3$.
+  \item $T(n) = T(n - 1) + 2$.
+  \item $T(n) = T(\sqrt n) + 1$.
+  \end{enumerate}
+}
+\medskip
+
+\begin{enumerate}[label=(\alph*)]
+\item By case 2 of the master method, $T(n) = \Theta(n \lg n)$.
+\item By case 2 of the master method, $T(n) = \Theta(n^2 \lg n)$.
+\item By case 2 of the master method, $T(n) = \Theta(n^3 \lg n)$.
+\item $T(n) = \Theta(n)$.
+  \begin{proof}
+    We first use the substitution method to show that $T(n) = O(n)$. Assume
+    $T(m) \leq cn - d$ for constants $c > 0$ and $d \geq 0$, and for all
+    positive $m < n$. Then $T(n - 1) \leq c(n - 1) - d$. Then
+    \begin{align*}
+      T(n) &\leq c(n - 1) - d + 2 \\
+      &= cn - c - d + 2 \\
+      &\leq cn - d && \text{for } d \geq 2 \, .
+    \end{align*}
+
+    Similarly we use the substitution method to show that $T(n) = \Omega(n)$.
+    Assume $T(m) \geq cn$ for some constant $c > 0$ and for all positive
+    $m < n$. Then $T(n - 1) \geq c(n - 1)$. Then
+    \begin{align*}
+      T(n) &\geq c(n - 1) + 2 \\
+      &= cn - c + 2 \\
+      &\geq cn && \text{for } c < 2 \, .
+    \end{align*}
+
+    Therefore since $T(n) = O(n)$ and $T(n) = \Theta(n)$.
+  \end{proof}
+\item $T(n) = \Theta(\lg(\lg n))$.
+  \begin{proof}
+    We use the substitution method to show $T(n) = \Theta(\lg(\lg n))$. Assume
+    $T(m) = c \lg(\lg m)$ for constant $c > 0$, and for all positive $m <
+    n$. Then $T(\sqrt n) = c \lg(\lg \sqrt n)$. Then
+    \begin{align*}
+      T(n) &= c \lg(\lg \sqrt n) + 1 \\
+      &= c \lg\left( {1 \over 2} \lg n \right) + 1 \\
+      &= c \lg(\lg n) - c + 1 \\
+      &= c \lg(\lg n) && \text{for } c = 1.
+    \end{align*}
+  \end{proof}
+\end{enumerate}
 
 \end{document}
 %%% Local Variables:
