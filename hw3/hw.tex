@@ -101,9 +101,6 @@
         child [dashed] {node (i) {}}
       };
 
-    %\node [below=2.5cm of j.west,anchor=west] {$T(1)$ $T(1)$ $T(1)$ $T(1)$ $T(1)$ $T(1)$ $T(1)$
-      %$T(1)$ $T(1)$ $T(1)$ $T(1)$ $T(1)$ $T(1)$ $T(1)$ \ldots $T(1)$};
-
     \node [below=2.5cm of j.west,anchor=west] (aa) {$T(1)$};
     \node [above=0.5cm of aa] (az) {};
     \draw [dashed] (aa.north) -- (az);
@@ -198,16 +195,18 @@ level, or $O(n \lg n)$.
         }
       };
 
-    \node [below=2cm of c] (e) {$T(1)$};
+    \node [below=2cm of c] (e) {$T(0)$};
+    \node [above=0.5cm of e] (ez) {};
+    \draw [dashed] (e) -- (ez);
 
     \node [left=3cm of z.center] (f) {};
     \node [left=3cm of e.center] (g) {};
-    \draw [<->] (f.north) -- (g.south) node [midway,fill=white] {$n$};
+    \draw [<->] (f.north) -- (g.south) node [midway,fill=white] {$n + 1$};
 
     \path (z) ++(3cm,0) node {$1$};
-    \path (a) ++(3cm,0) node {$n - 1$};
-    \path (b) ++(3cm,0) node {$n - 1(2)$};
-    \path (c) ++(3cm,0) node {$n - 1(3)$};
+    \path (a) ++(3cm,0) node {$1$};
+    \path (b) ++(3cm,0) node {$1$};
+    \path (c) ++(3cm,0) node {$1$};
     \path (d) ++(3cm,0) node {\vdots};
     \path (e) ++(3cm,0) node {$\Theta(1)$};
   \end{tikzpicture}
@@ -215,19 +214,16 @@ level, or $O(n \lg n)$.
 \end{figure*}
 
 \noindent
-We expect the solution to be at most the number of levels ($n$) times the cost
-of each level ($n - i$), or $n^2$.
+We expect the solution to be at most the number of levels times the cost of each
+level, or $O(n)$.
 
 \begin{proof}
-  Assume $T(m) \leq cm^2$ for some $c > 0$ and for all positive $m < n$. Then
-  $T(n - 1) \leq c {(n - 1)}^2$. Then
+  Assume $T(m) \leq cm$ for some $c > 0$ and for all positive $m < n$. Then
+  $T(n - 1) \leq c (n - 1)$. Then
   \begin{align*}
-    % T(n) &\leq c(n - 1) + 1 \\
-    % &= cn - c + 1 \\
-    % &\leq cn && \text{for } c = 1 \, .
-    T(n) &\leq c{(n - 1)}^2 + 1 \\
-    &= cn^2 - 2cn + c + 1 \\
-    &\leq cn^2 && \text{for } c = 1 \, .
+    T(n) &\leq c(n - 1) + 1 \\
+    &= cn - c + 1 \\
+    &\leq cn && \text{for } c \geq 1 \, .
   \end{align*}
 \end{proof}
 
@@ -315,25 +311,14 @@ Given the above analysis, we would prefer algorithm A over the others.
 \item By case 2 of the master method, $T(n) = \Theta(n^3 \lg n)$.
 \item $T(n) = \Theta(n)$.
   \begin{proof}
-    We first use the substitution method to show that $T(n) = O(n)$. Assume
-    $T(m) \leq cn - d$ for constants $c > 0$ and $d \geq 0$, and for all
-    positive $m < n$. Then $T(n - 1) \leq c(n - 1) - d$. Then
+    We use the substitution method to show that $T(n) = \Theta(n)$. Assume
+    $T(m) = cn$ for constant $c > 0$, and for all positive $m < n$. Then
+    $T(n - 1) = c(n - 1)$. Then
     \begin{align*}
-      T(n) &\leq c(n - 1) - d + 2 \\
-      &= cn - c - d + 2 \\
-      &\leq cn - d && \text{for } d \geq 2 \, .
-    \end{align*}
-
-    Similarly we use the substitution method to show that $T(n) = \Omega(n)$.
-    Assume $T(m) \geq cn$ for some constant $c > 0$ and for all positive
-    $m < n$. Then $T(n - 1) \geq c(n - 1)$. Then
-    \begin{align*}
-      T(n) &\geq c(n - 1) + 2 \\
+      T(n) &= c(n - 1) + 2 \\
       &= cn - c + 2 \\
-      &\geq cn && \text{for } c < 2 \, .
+      &= cn && \text{for } c = 2 \, .
     \end{align*}
-
-    Therefore since $T(n) = O(n)$ and $T(n) = \Theta(n)$.
   \end{proof}
 \item $T(n) = \Theta(\lg(\lg n))$.
   \begin{proof}
@@ -344,7 +329,7 @@ Given the above analysis, we would prefer algorithm A over the others.
       T(n) &= c \lg(\lg \sqrt n) + 1 \\
       &= c \lg\left( {1 \over 2} \lg n \right) + 1 \\
       &= c \lg(\lg n) - c + 1 \\
-      &= c \lg(\lg n) && \text{for } c = 1.
+      &= c \lg(\lg n) && \text{for } c = 1 \, .
     \end{align*}
   \end{proof}
 \end{enumerate}
